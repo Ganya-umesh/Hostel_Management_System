@@ -1,7 +1,10 @@
 package com.example.hostel_management.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.List;
 
 
@@ -16,7 +19,7 @@ import java.util.List;
 public class Hosteller{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long hosteller_id;
 
     @Column(nullable = false)
     private String username;
@@ -29,9 +32,6 @@ public class Hosteller{
 
     @Column(nullable = false, unique = true)
     private String email;
-
-    @Column(name = "full_name", nullable = false)
-    private String fullName;
 
     @Column(name="parent_number", nullable = false)
     private Integer parentNumber;
@@ -56,10 +56,21 @@ public class Hosteller{
     }
 
 
-    @OneToMany(mappedBy = "hosteller",fetch=FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "hosteller",fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "hosteller-complaints")
     private List<Complaint> complaintsLodged;
 
-    @OneToMany(mappedBy = "hosteller",fetch = FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "hosteller",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "hosteller-leave")
     private List<LeaveForm> leavesApplied;
+
+    @OneToMany(mappedBy = "hosteller",fetch = FetchType.LAZY,cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @JsonManagedReference(value = "hosteller-payments")
+    private List<Payments> paymentsMade; //we don't want cascade.remove here because we don't want to remove the payment if the hosteller is removed
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "hosteller_id", referencedColumnName = "hosteller_id", nullable = false)
+    @JsonBackReference(value = "hosteller-parent")
+    private Parent parent;
 
 }

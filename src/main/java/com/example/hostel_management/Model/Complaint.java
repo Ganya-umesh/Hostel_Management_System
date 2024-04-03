@@ -1,5 +1,6 @@
 package com.example.hostel_management.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,17 +22,20 @@ public class Complaint {
     @Column(name = "complaint")
     private String complaint_description;
 
-    @Column(name = "hosteller_id")
-    private Long hostellerId;
+//    @Column(name = "hostellerId")
+//    private Long hostellerId;
+//
+//    @Column(name = "resolved_by_warden_id")
+//    private Long wardenId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "Status", columnDefinition = "ENUM('Pending', 'Resolved')")
     public ComplaintStatus status;
 
-    @Column(name = "lodging_time")
+    @Column(name = "lodging_time",nullable = false)
     private LocalDateTime lodgingTime;
 
-    @Column(name = "resolving_time")
+    @Column(name = "resolving_time",nullable = false)
     private LocalDateTime resolvingTime;
 
 
@@ -47,6 +51,14 @@ public class Complaint {
         ELECTRICITY, PLUMBING, WATER, FOOD, NOISE, INTERNET_AND_WIFI, OTHERS
     }
 
+    @ManyToOne
+    @JoinColumn(name = "hosteller", insertable = false, updatable = false, nullable = false)
+    @JsonBackReference(value = "hosteller-complaint")
+    private Hosteller hosteller;
 
+    @ManyToOne
+    @JoinColumn(name = "warden",insertable = false, updatable = false, nullable = false)
+    @JsonBackReference(value = "warden-complaint")
+    private Warden warden;
 
 }

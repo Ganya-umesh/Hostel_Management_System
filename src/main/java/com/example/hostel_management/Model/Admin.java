@@ -27,5 +27,4 @@ public class Admin{
 
     @Column(nullable = false,unique = true)
     private Integer PhoneNumber;
-
 }
