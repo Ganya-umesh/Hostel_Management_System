@@ -25,7 +25,7 @@ public class Hosteller{
     private String username;
 
 
-    @Column(unique = true)
+    @Column(name = "phone_number", unique = true,nullable = false)
     private String PhoneNumber;
 
     @Column(nullable = false)
@@ -69,5 +69,7 @@ public class Hosteller{
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "hosteller")
     @JsonManagedReference(value = "hosteller-parent")
     private Parent parent;
+
+
 
 }

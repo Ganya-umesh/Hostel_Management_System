@@ -2,6 +2,7 @@ package com.example.hostel_management.Controller;
 
 import com.example.hostel_management.Model.Hosteller;
 import com.example.hostel_management.Service.HostellerService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class HostellerController {
         this.hostellerService = hostellerService;
     }
 
-    @PostMapping(value = "",consumes = "application/json")
+    @PostMapping(value = "")
     public Hosteller saveHosteller(@RequestBody Hosteller hosteller){
         return hostellerService.saveHosteller(hosteller);
     }
@@ -30,11 +31,8 @@ public class HostellerController {
         return hostellerService.getAllHostellers();
     }
 
-
-
-
-
-
-
-
+    @PutMapping("/{id}")
+    public ResponseEntity<Hosteller> updateHosteller(@PathVariable Long id, @RequestBody Hosteller hosteller) {
+        return hostellerService.updateHosteller(id, hosteller);
+    }
 }
