@@ -2,7 +2,7 @@ spring:
      datasource:
        username: root
        password: ganya
-       url: jdbc:mysql://localhost:3306/hostel_db
+       url: jdbc:mysql://localhost:3306/hostel
        driver-class-name: com.mysql.cj.jdbc.Driver
      jpa:
          hibernate:

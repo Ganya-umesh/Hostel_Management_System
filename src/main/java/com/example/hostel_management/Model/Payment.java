@@ -6,12 +6,10 @@ import lombok.*;
 
 @Entity
 @Table(name = "payments")
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Payments {
+public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,17 +38,14 @@ public class Payments {
         PENDING, SUCCESS, FAILED
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hosteller", insertable = false, updatable = false)
-    @JsonBackReference(value = "hosteller-payment")
+    @ManyToOne(fetch = FetchType.LAZY,targetEntity = Hosteller.class)
+    @JoinColumn(name = "hosteller_id", insertable = false, updatable = false)
+    @JsonBackReference(value = "hosteller-payments")
     private Hosteller hosteller;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "warden")
+    @ManyToOne(fetch = FetchType.LAZY,targetEntity = Warden.class)
+    @JoinColumn(name = "warden_id")
     @JsonBackReference(value = "warden-payments")
     private Warden warden;
-
-
-
 
 }

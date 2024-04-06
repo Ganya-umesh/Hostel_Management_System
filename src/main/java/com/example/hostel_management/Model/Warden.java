@@ -9,8 +9,8 @@ import java.util.List;
 @Entity
 @Table(name = "warden")
 @Data
-@Getter
-@Setter
+//@Getter @Data internally uses @Getter and @Setter
+//@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -29,17 +29,17 @@ public class Warden{
     private String email;
 
     @Column(nullable = false,unique = true)
-    private Integer PhoneNumber;
+    private String PhoneNumber;
 
-     @OneToMany(mappedBy = "warden",fetch=FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Complaint.class)
+     @OneToMany(mappedBy = "warden",fetch=FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Complaint.class)
      @JsonManagedReference(value = "warden-complaints")
      private List<Complaint> complaintsResolved;
 
-     @OneToMany(mappedBy = "warden",fetch=FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = LeaveForm.class)
+     @OneToMany(mappedBy = "warden",fetch=FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = LeaveForm.class)
      @JsonManagedReference(value = "warden-leaveforms")
      private List<LeaveForm> leaveFormsApproved;
 
-     @OneToMany(mappedBy = "warden",fetch=FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Payments.class)
+     @OneToMany(mappedBy = "warden",fetch=FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Payment.class)
      @JsonManagedReference(value = "warden-payments")
-     private List<Payments> paymentsApproved;
+     private List<Payment> paymentsApproved;
 }

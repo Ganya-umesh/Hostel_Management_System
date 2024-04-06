@@ -3,23 +3,23 @@ package com.example.hostel_management.Model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Table(name = "parent")
 @Data
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class Parent{
     @Id
-    @Column(name = "hosteller_id", nullable = false)
-    private Long hosteller_id;
-
+    @Column(name = "id", nullable = false)
+    private Long id;
 
 
     @Column(nullable = false, unique = true)
@@ -32,13 +32,15 @@ public class Parent{
     private String email;
 
     @Column(nullable = false,unique = true)
-    private Integer PhoneNumber;
+    private String PhoneNumber;
 
-    @OneToOne(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id", referencedColumnName = "id", nullable = false)
     @JsonBackReference(value = "hosteller-parent")
-    private Hosteller hosteller;
+    private Hosteller hosteller; //joinColumn should come on the weaker side of the relationship
 
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonManagedReference(value = "parent-leaveforms")
     private List<LeaveForm> leaveFormsApproved;
 }

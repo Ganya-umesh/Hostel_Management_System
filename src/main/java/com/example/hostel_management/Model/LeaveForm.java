@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "LeaveForm")
 @Data
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -30,11 +28,13 @@ public class LeaveForm {
 //    @Column(name = "parentID",nullable = false)
 //    private Long parentId;
 
-    @Column(name = "leave_date",nullable = false)
-    private LocalDate leaveDate;
+    @Column(name = "checkout_date",nullable = false)
+    private LocalDate CheckOutDate;
 
     @Column(name = "check_out_time",nullable = false)
     private LocalDateTime checkOutTime;
+
+
 
     @Column(name = "expected_arrival_date",nullable = false)
     private LocalDate expectedArrivalDate;
@@ -45,27 +45,28 @@ public class LeaveForm {
 
     @Column(name = "check_in_date",nullable = false)
     private LocalDate checkInDate;
-
     @Column(name = "check_in_time",nullable = false)
     private LocalDateTime checkInTime;
+
+
 
     public enum FormStatus {
         PENDING, PARENT_APPROVED, WARDEN_APPROVED
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hosteller", insertable = false, updatable = false, nullable = false)
+    @JoinColumn(name = "hosteller_id", insertable = false, updatable = false, nullable = false)
     //UPDATABLE AND INSERTABLE IS FALSE BECAUSE WE ARE NOT ALLOWING TO UPDATE OR INSERT THE HOSTELLER ID
-    @JsonBackReference(value = "hosteller-leaveform")
+    @JsonBackReference(value = "hosteller-leaveforms")
     private Hosteller hosteller;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "warden", insertable = false, updatable = false, nullable = false)
+    @JoinColumn(name = "warden_id", insertable = false, updatable = false, nullable = false)
     @JsonBackReference(value = "warden-leaveforms")
     private Warden warden;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent",insertable = false, updatable = false, nullable = false)
+    @JoinColumn(name = "parent_id",insertable = false, updatable = false, nullable = false)
     @JsonBackReference(value = "parent-leaveforms")
     private Parent parent;
 }

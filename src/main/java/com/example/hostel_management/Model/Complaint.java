@@ -7,8 +7,6 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Data
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -19,7 +17,7 @@ public class Complaint {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "complaint")
+    @Column(name = "complaint_description", nullable = false)
     private String complaint_description;
 
 //    @Column(name = "hostellerId")
@@ -52,13 +50,13 @@ public class Complaint {
     }
 
     @ManyToOne
-    @JoinColumn(name = "hosteller", insertable = false, updatable = false, nullable = false)
-    @JsonBackReference(value = "hosteller-complaint")
+    @JoinColumn(name = "hosteller_id", insertable = false, updatable = false, nullable = false)
+    @JsonBackReference(value = "hosteller-complaints")
     private Hosteller hosteller;
 
     @ManyToOne
-    @JoinColumn(name = "warden",insertable = false, updatable = false, nullable = false)
-    @JsonBackReference(value = "warden-complaint")
+    @JoinColumn(name = "warden_id",insertable = false, updatable = false, nullable = false)
+    @JsonBackReference(value = "warden-complaints")
     private Warden warden;
 
 }
