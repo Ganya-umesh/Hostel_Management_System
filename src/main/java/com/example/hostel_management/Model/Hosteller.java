@@ -26,7 +26,7 @@ public class Hosteller{
 
 
     @Column(name = "phone_number", unique = true,nullable = false)
-    private String PhoneNumber;
+    private String phoneNumber;
 
     @Column(nullable = false)
     private String password;
@@ -53,6 +53,18 @@ public class Hosteller{
         CSE, ECE, MECH, AI_ML, EEE, BT
     }
 
+    @Override
+    public String toString() {
+        return "Hosteller{" +
+                "username='" + username + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", roomNumber=" + roomNumber +
+                ", currentGradYear='" + currentGradYear + '\'' +
+                ", branch='" + branch + '\'' +
+                '}';
+    }
 
     @OneToMany(mappedBy = "hosteller",fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonManagedReference(value = "hosteller-complaints")
@@ -66,7 +78,7 @@ public class Hosteller{
     @JsonManagedReference(value = "hosteller-payments")
     private List<Payment> paymentsMade; //we don't want cascade.remove here because we don't want to remove the payment if the hosteller is removed
 
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "hosteller")
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "hosteller", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "hosteller-parent")
     private Parent parent;
 

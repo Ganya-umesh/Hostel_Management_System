@@ -3,10 +3,7 @@ package com.example.hostel_management.Model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -17,7 +14,9 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class Parent{
+
     @Id
+    @Generated
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -32,10 +31,21 @@ public class Parent{
     private String email;
 
     @Column(nullable = false,unique = true)
-    private String PhoneNumber;
+    private String phoneNumber;
+
+    @Override
+    public String toString() {
+        return "Parent{" +
+                "username='" + username + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id", referencedColumnName = "id", nullable = false)
+    @MapsId
     @JsonBackReference(value = "hosteller-parent")
     private Hosteller hosteller; //joinColumn should come on the weaker side of the relationship
 
