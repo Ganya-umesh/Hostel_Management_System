@@ -1,6 +1,7 @@
 package com.example.hostel_management.Model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,7 +35,8 @@ public class Hosteller{
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "room_number", nullable = false)
+    @Column(name = "room_number")
+    @Nullable
     private Integer roomNumber;
 
     @Enumerated(EnumType.STRING)
