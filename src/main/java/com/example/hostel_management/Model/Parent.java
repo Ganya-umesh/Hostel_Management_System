@@ -52,5 +52,5 @@ public class Parent{
 
     @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonManagedReference(value = "parent-leaveforms")
-    private List<LeaveForm> leaveFormsApproved;
+    private List<LeaveForm> leaveForms;
 }

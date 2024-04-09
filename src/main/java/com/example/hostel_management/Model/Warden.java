@@ -43,13 +43,13 @@ public class Warden{
 
      @OneToMany(mappedBy = "warden",fetch=FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Complaint.class)
      @JsonManagedReference(value = "warden-complaints")
-     private List<Complaint> complaintsResolved;
+     private List<Complaint> complaints;
 
      @OneToMany(mappedBy = "warden",fetch=FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = LeaveForm.class)
      @JsonManagedReference(value = "warden-leaveforms")
-     private List<LeaveForm> leaveFormsApproved;
+     private List<LeaveForm> leaveForms;
 
      @OneToMany(mappedBy = "warden",fetch=FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Payment.class)
      @JsonManagedReference(value = "warden-payments")
-     private List<Payment> paymentsApproved;
+     private List<Payment> payments;
 }

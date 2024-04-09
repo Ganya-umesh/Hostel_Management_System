@@ -33,8 +33,9 @@ public class LeaveForm {
     private LocalDate expectedArrivalDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "form_status", columnDefinition = "ENUM('PENDING', 'PARENT_APPROVED', 'WARDEN_APPROVED')")
+    @Column(name = "form_status")
     private FormStatus formStatus;
+
 
     @Column(name = "check_in_date")
     private LocalDate checkInDate;
@@ -44,8 +45,9 @@ public class LeaveForm {
     private LocalDateTime checkInTime;
 
     public enum FormStatus {
-        PENDING, PARENT_APPROVED, WARDEN_APPROVED
+        PENDING, PARENT_APPROVED, WARDEN_APPROVED,REJECTED
     }
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hosteller_id",nullable = false)
@@ -61,4 +63,5 @@ public class LeaveForm {
     @JoinColumn(name = "parent_id",nullable = false)
     @JsonBackReference(value = "parent-leaveforms")
     private Parent parent;
+
 }
