@@ -7,6 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 
 @Service
 public class LeaveFormService {
@@ -101,6 +105,39 @@ public class LeaveFormService {
         // Update form status to REJECTED_BY_WARDEN
         leaveForm.setFormStatus(LeaveForm.FormStatus.REJECTED);
         leaveForm.setWarden(wardenService.getWardenById(wardenId)); // Set the warden
+
+        return leaveFormRepository.save(leaveForm);
+    }
+
+    public LeaveForm updateCheckInDateTimeByHosteller(Long leaveFormId, Long hostellerId) {
+        LeaveForm leaveForm = leaveFormRepository.findById(leaveFormId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Leave form not found with ID: " + leaveFormId));
+
+        // Check if the leave form status is WARDEN_APPROVED
+        if (leaveForm.getFormStatus() != LeaveForm.FormStatus.WARDEN_APPROVED) {
+            throw new IllegalStateException("Check-in date can only be updated if the leave form is approved by the warden.");
+        }
+
+        // Check if the hosteller associated with the leave form is the one making the update
+        if (!leaveForm.getHosteller().getId().equals(hostellerId)) {
+            throw new IllegalArgumentException("Only the hosteller associated with this leave form can update it.");
+        }
+
+        LocalTime currentTime = LocalTime.now();
+        if (currentTime.isBefore(LocalTime.of(7, 0)) || currentTime.isAfter(LocalTime.of(22, 0))) {
+            throw new IllegalStateException("Check-in requests are only allowed between 7 AM and 9 PM.");
+        }
+
+        // Update check-in date and time to current date and time
+        leaveForm.setCheckInDate(LocalDate.now());
+        leaveForm.setCheckInTime(LocalDateTime.now());
+
+        // Check if the provided check-in date is later than the checkout date
+        if (leaveForm.getCheckInDate().isBefore(leaveForm.getCheckOutDate())) {
+            throw new IllegalArgumentException("Check-in date must be later than checkout date.");
+        }
+
+        leaveForm.setFormStatus(LeaveForm.FormStatus.CHECKIN_REQUESTED);
 
         return leaveFormRepository.save(leaveForm);
     }

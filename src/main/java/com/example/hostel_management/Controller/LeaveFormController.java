@@ -18,7 +18,7 @@ public class LeaveFormController {
     private final AuthenticationService authenticationService;
     private static final Logger logger = LoggerFactory.getLogger(LeaveFormController.class);
 
-    public LeaveFormController(LeaveFormService leaveFormService, AuthenticationService authenticationService) {
+    public LeaveFormController(LeaveFormService leaveFormService,AuthenticationService authenticationService) {
         this.leaveFormService = leaveFormService;
         this.authenticationService = authenticationService;
     }
@@ -102,5 +102,27 @@ public class LeaveFormController {
         private Long wardenId;
         private String status;
     }
+
+
+    @PutMapping("/{leaveFormId}/checkin")
+    public ResponseEntity<LeaveForm> updateCheckInDateTimeByHosteller(
+            @PathVariable Long leaveFormId,
+            @RequestBody UpdateCheckInRequest request
+    ) {
+        Long hostellerId = request.getHostellerId();
+
+        logger.info("Received PUT request for leave form id: {}", leaveFormId);
+        logger.info("Hosteller Id: {}", hostellerId);
+
+        LeaveForm updatedLeaveForm = leaveFormService.updateCheckInDateTimeByHosteller(leaveFormId, hostellerId);
+        return ResponseEntity.ok().body(updatedLeaveForm);
+    }
+
+    // Define a class to represent the request body for updating check-in date and time
+    @Data
+    public static class UpdateCheckInRequest {
+        private Long hostellerId;
+    }
+
 }
 

@@ -45,7 +45,7 @@ public class LeaveForm {
     private LocalDateTime checkInTime;
 
     public enum FormStatus {
-        PENDING, PARENT_APPROVED, WARDEN_APPROVED,REJECTED
+        PENDING, PARENT_APPROVED, WARDEN_APPROVED,REJECTED,CHECKIN_REQUESTED ,CHECKIN_APPROVED
     }
 
 
