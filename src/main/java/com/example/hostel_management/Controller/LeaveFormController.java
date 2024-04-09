@@ -124,5 +124,25 @@ public class LeaveFormController {
         private Long hostellerId;
     }
 
+    @PutMapping("/{leaveFormId}/checkin/approve")
+    public ResponseEntity<LeaveForm> approveCheckInRequestByWarden(
+            @PathVariable Long leaveFormId,
+            @RequestBody WardenActionRequest request
+    ) {
+        Long wardenId = request.getWardenId();
+
+        logger.info("Received PUT request to approve check-in for leave form id: {}", leaveFormId);
+        logger.info("Warden Id: {}", wardenId);
+
+        LeaveForm approvedLeaveForm = leaveFormService.approveCheckInRequestByWarden(leaveFormId, wardenId);
+        return ResponseEntity.ok().body(approvedLeaveForm);
+    }
+
+    // this is an alternative of using map function
+    @Data
+    public static class WardenActionRequest {
+        private Long wardenId;
+    }
+
 }
 

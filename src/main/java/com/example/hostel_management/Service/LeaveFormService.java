@@ -142,4 +142,25 @@ public class LeaveFormService {
         return leaveFormRepository.save(leaveForm);
     }
 
+    public LeaveForm approveCheckInRequestByWarden(Long leaveFormId, Long wardenId) {
+        LeaveForm leaveForm = leaveFormRepository.findById(leaveFormId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Leave form not found with ID: " + leaveFormId));
+
+        // Check if the leave form status is CHECKIN_REQUESTED
+        if (leaveForm.getFormStatus() != LeaveForm.FormStatus.CHECKIN_REQUESTED) {
+            throw new IllegalStateException("Check-in request can only be approved by the warden if it's in CHECKIN_REQUESTED status.");
+        }
+
+        // Check if the provided wardenId exists
+        if (wardenService.getWardenById(wardenId) == null) {
+            throw new IllegalArgumentException("Warden with ID " + wardenId + " does not exist.");
+        }
+
+        // Update form status to CHECKIN_APPROVED
+        leaveForm.setFormStatus(LeaveForm.FormStatus.CHECKIN_APPROVED);
+        //leaveForm.setWarden(wardenService.getWardenById(wardenId)); // Set the warden
+
+        return leaveFormRepository.save(leaveForm);
+    }
+
 }
