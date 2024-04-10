@@ -78,7 +78,7 @@ public class Hosteller{
 
     @OneToMany(mappedBy = "hosteller",fetch = FetchType.EAGER,cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     @JsonManagedReference(value = "hosteller-payments")
-    private List<Payment> paymentsMade; //we don't want cascade.remove here because we don't want to remove the payment if the hosteller is removed
+    private List<Payment> paymentslist; //we don't want cascade.remove here because we don't want to remove the payment if the hosteller is removed
 
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "hosteller", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "hosteller-parent")

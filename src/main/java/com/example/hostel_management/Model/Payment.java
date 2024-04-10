@@ -24,22 +24,35 @@ public class Payment {
     @Column(nullable = false)
     private Long amount;
 
-    @Column(nullable = false)
+    @Column()
     private String TransactionDate;
 
-    @Column(nullable = false)
-    private String TransactionType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "transaction_type")
+    private TransactionType transactionType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "payment_status", columnDefinition = "ENUM('Pending', 'SUCCESS','FAILED')")
+    @Column(name = "payment_status")
     private PaymentStatus paymentStatus;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_mode")
+    private PaymentMode paymentMode;
+
     public enum PaymentStatus {
-        PENDING, SUCCESS, FAILED
+        PENDING,HOSTELLER_CONFIRMED_PAYMENT,SUCCESS, FAILED
+    }
+
+    public enum TransactionType {
+        HOSTEL_RENT, MESS_FEES, MAINTENANCE, OTHERS
+    }
+
+    public enum PaymentMode {
+        CARD, UPI, NETBANKING
     }
 
     @ManyToOne(fetch = FetchType.LAZY,targetEntity = Hosteller.class)
-    @JoinColumn(name = "hosteller_id", insertable = false, updatable = false)
+    @JoinColumn(name = "hosteller_id")
     @JsonBackReference(value = "hosteller-payments")
     private Hosteller hosteller;
 
