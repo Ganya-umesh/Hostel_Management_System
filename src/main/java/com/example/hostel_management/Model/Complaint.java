@@ -27,18 +27,18 @@ public class Complaint {
 //    private Long wardenId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "Status", columnDefinition = "ENUM('Pending', 'Resolved')")
+    @Column(name = "Status")
     public ComplaintStatus status;
 
     @Column(name = "lodging_time",nullable = false)
     private LocalDateTime lodgingTime;
 
-    @Column(name = "resolving_time",nullable = false)
+    @Column(name = "resolving_time")
     private LocalDateTime resolvingTime;
 
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "complaint_type", columnDefinition = "ENUM('Electricity','Plumbing', 'Water', 'Food', 'Noise','Internet and Wifi', 'Others')")
+    @Column(name = "complaint_type")
     private ComplaintType complaintType;
 
     public enum ComplaintStatus {
@@ -50,12 +50,12 @@ public class Complaint {
     }
 
     @ManyToOne
-    @JoinColumn(name = "hosteller_id", insertable = false, updatable = false, nullable = false)
+    @JoinColumn(name = "hosteller_id",nullable = false)
     @JsonBackReference(value = "hosteller-complaints")
     private Hosteller hosteller;
 
     @ManyToOne
-    @JoinColumn(name = "warden_id",insertable = false, updatable = false, nullable = false)
+    @JoinColumn(name = "warden_id",nullable = false)
     @JsonBackReference(value = "warden-complaints")
     private Warden warden;
 

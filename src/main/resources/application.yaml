@@ -16,3 +16,9 @@ spring:
               non_contextual_creation: true
               database: mysql
             database-platform: org.hibernate.dialect.MySQLDialect
+logging:
+  level:
+    root: INFO
+    com:
+      example:
+        hostel_management: INFO
