@@ -6,10 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
+import jakarta.servlet.http.HttpSession;
 
-@Controller // Use @Controller annotation for Thymeleaf controller
-@RequestMapping("/login") // Remove "/api" from the request mapping
-public class LoginController {
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
+
+@Controller
+@RequestMapping("/login")
+public class    LoginController {
 
     private final LoginService loginService;
 
@@ -20,47 +26,72 @@ public class LoginController {
 
     @GetMapping("/loginForm")
     public String showLoginForm(Model model) {
-        model.addAttribute("login", new Login()); // Add an empty Login object to the model
-        return "login"; // Return the name of the HTML template file without extension
+        model.addAttribute("login", new Login());
+        return "login";
     }
 
     @GetMapping("/registerForm")
     public String showRegisterForm(Model model) {
-        model.addAttribute("register", new Login()); // Add an empty Login object to the model
-        return "register"; // Return the name of the HTML template file without extension
+        model.addAttribute("register", new Login());
+        return "register";
     }
 
     @PostMapping("/loginSubmit")
-    public String loginSubmit(@ModelAttribute Login login) {
+    public String loginSubmit(@ModelAttribute Login login, HttpSession session,Model model) {
         String username = login.getUsername();
         String password = login.getPassword();
 
-        System.out.println("username "+username);
-        System.out.println("password "+password);
+        System.out.println("username " + username);
+        System.out.println("password " + password);
 
         if (loginService.authenticate(username, password)) {
-            // Authentication successful, redirect to dashboard
+            session.setAttribute("username", username);
             return "redirect:/dashboard";
         } else {
-            // Authentication failed, redirect back to login form with error message
             return "redirect:/login/loginForm?error";
         }
     }
 
     @PostMapping("/registerSubmit")
-    public String register(@ModelAttribute Login login) {
+    public String register(@ModelAttribute Login login, HttpSession session,Model model) {
         try {
             loginService.saveLogin(login);
-            // Implement registration logic here (e.g., validate and save credentials)
-            // Return appropriate response based on registration success or failure
-            // For simplicity, let's return a success message
-            return "redirect:/dashboard"; // Redirect to dashboard page after successful registration
+            session.setAttribute("username", login.getUsername());
+            model.addAttribute("username", login.getUsername());
+            return "redirect:/dashboard";
         } catch (Exception e) {
-            // Log the error
             System.err.println("Error occurred while registering: " + e.getMessage());
-            // Redirect to an error page or return an appropriate error message
             return "error";
         }
     }
-}
 
+    @GetMapping("/oauth2/authorization/google")
+    public String initiateOAuth2Login(HttpSession session) {
+        String redirectUrl = "https://accounts.google.com/o/oauth2/auth";
+        String clientId = "674245147101-71semnplg8hn3mud1bckmdfe9g8r5q77.apps.googleusercontent.com";
+        String redirectUri = "http://localhost:8080/dashboard";
+        String scope = "openid profile email"; // Define your required scopes
+
+        // Build the redirect URL with required parameters
+        redirectUrl += "?response_type=code" +
+                "&client_id=" + clientId +
+                "&redirect_uri=" + redirectUri +
+                "&scope=" + scope;
+
+        // Store a flag in session indicating that the user is logging in via OAuth
+        session.setAttribute("oauth_login", true);
+
+        // Print the flag value for debugging
+        System.out.println("OAuth login flag set: " + session.getAttribute("oauth_login"));
+
+        return "redirect:" + redirectUrl;
+    }
+
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session, SessionStatus sessionStatus) {
+        session.invalidate();
+        sessionStatus.setComplete();
+        return "redirect:/login/loginForm";
+    }
+}

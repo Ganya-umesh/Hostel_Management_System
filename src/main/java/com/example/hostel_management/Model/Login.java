@@ -23,14 +23,19 @@ public class Login {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "username",nullable = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column(name="password",nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(name = "year",nullable = false)
     private Integer year;
+
+    @Column(name="role",columnDefinition = "VARCHAR(255) DEFAULT 'ROLE_USER'")
+    private String role;
+
+
 
     public String getPassword() {
         return this.password;

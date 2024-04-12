@@ -8,6 +8,7 @@
 <body>
 <h1>Register</h1>
 <form th:action="@{/login/registerSubmit}" method="post">
+    <input type="hidden" name="role" value="ROLE_USER">
     <label>Username: <input type="text" name="username"></label><br>
     <label>Password: <input type="password" name="password"></label><br>
     <label>Year:</label>
@@ -18,6 +19,9 @@
         <option value="4">4th Year</option>
     </select><br>
     <button type="submit">Register</button>
+
+    <a th:href="@{/login/oauth2/authorization/google}"><img src="google-icon.png" alt="or sign in with Google instead"></a>
+
 </form>
 </body>
 </html>

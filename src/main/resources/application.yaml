@@ -1,18 +1,39 @@
 spring:
-     datasource:
-       username: root
-       password: aditya11
-       url: jdbc:mysql://localhost:3306/hostel_management_project
-       driver-class-name: com.mysql.cj.jdbc.Driver
-     jpa:
-         hibernate:
-            ddl-auto: update
-         show-sql: true
-         properties:
-            hibernate:
-              format_sql: true
-              jdbc:
-                 lob:
-              non_contextual_creation: true
-              database: mysql
-            database-platform: org.hibernate.dialect.MySQLDialect
+  datasource:
+    username: root
+    password: aditya11
+    url: jdbc:mysql://localhost:3306/hostel_management_project
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+          database: mysql
+      database-platform: org.hibernate.dialect.MySQLDialect
+  session:
+    store-type: jdbc
+    jdbc:
+      initialize-schema: always
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 674245147101-71semnplg8hn3mud1bckmdfe9g8r5q77.apps.googleusercontent.com
+            client-secret: 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
+            scope: openid, profile, email
+          redirect-uri: "http://localhost:8080/login/oauth2/code/google"
+          client-name: Google
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            user-name-attribute: sub

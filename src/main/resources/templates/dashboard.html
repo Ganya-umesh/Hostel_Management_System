@@ -6,12 +6,11 @@
     <title>Dashboard</title>
 </head>
 <body>
-<h1>Welcome to the Dashboard</h1>
+<h1>Welcome, <span th:text="${username}"></span>!</h1>
 <div>
     <h2>Options:</h2>
     <ul>
-        <li><a th:href="@{/login/loginForm}">Login</a></li>
-        <li><a th:href="@{/login/registerForm}">Register</a></li>
+        <li><a th:href="@{/login/logout}">Logout</a></li>
     </ul>
 </div>
 </body>
