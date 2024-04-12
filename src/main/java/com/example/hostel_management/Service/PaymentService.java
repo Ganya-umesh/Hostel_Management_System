@@ -79,5 +79,14 @@ public class PaymentService {
         payment.setPaymentStatus(paymentStatus);
         return paymentRepository.save(payment);
     }
+
+    public Payment getPaymentById(Long id) {
+        return paymentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Payment not found with id: " + id));
+    }
+
+    public List<Payment> getAllPayments() {
+        return paymentRepository.findAll();
+    }
 }
 

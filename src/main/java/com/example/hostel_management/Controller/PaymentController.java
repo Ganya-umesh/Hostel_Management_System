@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/payment")
 public class PaymentController {
@@ -42,5 +44,15 @@ public class PaymentController {
     @Data
     private static class PaymentStatusRequest {
         private Payment.PaymentStatus paymentStatus;
+    }
+
+    @GetMapping("/{id}")
+    public Payment getPaymentById(@PathVariable Long id) {
+        return paymentService.getPaymentById(id);
+    }
+
+    @GetMapping("")
+    public List<Payment> getAllPayments() {
+        return paymentService.getAllPayments();
     }
 }

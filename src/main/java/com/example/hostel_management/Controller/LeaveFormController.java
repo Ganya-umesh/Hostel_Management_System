@@ -33,7 +33,7 @@ public class LeaveFormController {
         authenticationService.validateParentHostellerRelationship(parentId, hostellerId);
 
         LeaveForm savedLeaveForm = leaveFormService.saveLeaveForm(leaveForm, hostellerId, parentId);
-        return new ResponseEntity<>(savedLeaveForm, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedLeaveForm);
     }
 
     @GetMapping("/{id}")
@@ -58,17 +58,27 @@ public class LeaveFormController {
         // Check if the authenticated parent is associated with the hosteller of the leave form
         authenticationService.validateParentHostellerRelationship(parentId, hostellerId);
 
-        if ("approve".equalsIgnoreCase(status)) {
-            LeaveForm approvedLeaveForm = leaveFormService.approveLeaveFormByParent(leaveFormId);
-            return ResponseEntity.ok().body(approvedLeaveForm);
-        } else if ("reject".equalsIgnoreCase(status)) {
-            LeaveForm rejectedLeaveForm = leaveFormService.rejectLeaveFormByParent(leaveFormId);
-            return ResponseEntity.ok().body(rejectedLeaveForm);
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
-    }
+        LeaveForm leaveForm = leaveFormService.getLeaveFormById(leaveFormId);
 
+        if (leaveForm == null) {
+            return ResponseEntity.notFound().build(); // Return 404 if leave form not found
+        }
+        if (!leaveForm.getHosteller().getId().equals(hostellerId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(null); // Return 403 Forbidden if the leave form doesn't belong to the specified hosteller
+        }
+
+        LeaveForm updatedLeaveForm;
+        if ("approve".equalsIgnoreCase(status)) {
+            updatedLeaveForm = leaveFormService.approveLeaveFormByParent(leaveFormId);
+        } else if ("reject".equalsIgnoreCase(status)) {
+            updatedLeaveForm = leaveFormService.rejectLeaveFormByParent(leaveFormId);
+        } else {
+            return ResponseEntity.badRequest().build(); // Return 400 Bad Request if the status is invalid
+        }
+
+        return ResponseEntity.ok(updatedLeaveForm);
+    }
     @PutMapping("/{leaveFormId}/stats/warden")
     public ResponseEntity<LeaveForm> updateLeaveFormStatusByWarden(
             @PathVariable Long leaveFormId,
