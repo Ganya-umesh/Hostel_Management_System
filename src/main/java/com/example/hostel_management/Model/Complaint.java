@@ -20,12 +20,6 @@ public class Complaint {
     @Column(name = "complaint_description", nullable = false)
     private String complaint_description;
 
-//    @Column(name = "hostellerId")
-//    private Long hostellerId;
-//
-//    @Column(name = "resolved_by_warden_id")
-//    private Long wardenId;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "Status")
     public ComplaintStatus status;
@@ -58,5 +52,20 @@ public class Complaint {
     @JoinColumn(name = "warden_id",nullable = false)
     @JsonBackReference(value = "warden-complaints")
     private Warden warden;
+
+    @Override
+    public String toString() {
+        return "Complaint{" +
+                "id=" + id +
+                ", complaint_description='" + complaint_description + '\'' +
+                ", status=" + status +
+                ", lodgingTime=" + lodgingTime +
+                ", resolvingTime=" + resolvingTime +
+                ", complaintType=" + complaintType +
+                //", hosteller=" + (hosteller != null ? hosteller.getName() + " (Room: " + hosteller.getRoomNumber() + ")" : null) +
+                //", warden=" + (warden != null ? warden.getName() : null) +
+                '}';
+    }
+
 
 }

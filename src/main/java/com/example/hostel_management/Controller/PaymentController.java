@@ -19,10 +19,22 @@ public class PaymentController {
     }
 
     @PostMapping("/warden/{wardenId}/raise-for-all")
-    public ResponseEntity<String> raisePaymentRequestForAllHostellers(@PathVariable Long wardenId, @RequestBody Payment paymentRequest) {
+    public ResponseEntity<String> raisePaymentRequestForAllHostellers(@PathVariable Long wardenId, @RequestBody PaymentRequestDTO paymentRequestDTO) {
+        Payment paymentRequest = new Payment();
+        paymentRequest.setAmount(paymentRequestDTO.getAmount());
+        paymentRequest.setTransactionType(paymentRequestDTO.getTransactionType());
+        paymentRequest.setPaymentStatus(Payment.PaymentStatus.PENDING);
         paymentService.raisePaymentRequestForAllHostellers(wardenId, paymentRequest);
         return new ResponseEntity<>("Payment request raised successfully for all hostellers", HttpStatus.CREATED);
     }
+    @Data
+    private static class PaymentRequestDTO {
+        private Long amount;
+        private Payment.TransactionType transactionType;
+        private Payment.PaymentMode paymentMode;
+    }
+
+
 
     @PutMapping("/hosteller/{hostellerId}/payment/{paymentId}")
     public ResponseEntity<Payment> makePayment(@PathVariable Long hostellerId, @PathVariable Long paymentId, @RequestBody PaymentRequest request) {
@@ -35,16 +47,9 @@ public class PaymentController {
         private String transactionDate;
         private Payment.PaymentMode paymentMode;
     }
-    @PutMapping("/warden/{wardenId}/payment/{paymentId}")
-    public ResponseEntity<Payment> verifyPayment(@PathVariable Long wardenId, @PathVariable Long paymentId, @RequestBody PaymentStatusRequest request) {
-        Payment payment = paymentService.verifyPayment(wardenId, paymentId, request.getPaymentStatus());
-        return new ResponseEntity<>(payment, HttpStatus.OK);
-    }
 
-    @Data
-    private static class PaymentStatusRequest {
-        private Payment.PaymentStatus paymentStatus;
-    }
+
+
 
     @GetMapping("/{id}")
     public Payment getPaymentById(@PathVariable Long id) {

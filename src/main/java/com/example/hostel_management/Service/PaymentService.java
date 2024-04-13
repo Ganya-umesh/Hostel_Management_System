@@ -32,10 +32,8 @@ public class PaymentService {
         for (Hosteller hosteller : hostellers) {
             Payment payment = new Payment();
             payment.setAmount(paymentRequest.getAmount());
-            payment.setTransactionDate(paymentRequest.getTransactionDate());
             payment.setTransactionType(paymentRequest.getTransactionType());
-            payment.setPaymentStatus(paymentRequest.getPaymentStatus());
-            payment.setPaymentMode(paymentRequest.getPaymentMode());
+            payment.setPaymentStatus(Payment.PaymentStatus.PENDING);
             payment.setHosteller(hosteller);
             payment.setWarden(warden);
             paymentRepository.save(payment);
@@ -56,29 +54,18 @@ public class PaymentService {
             throw new RuntimeException("This payment has already been processed");
         }
 
-        payment.setPaymentStatus(Payment.PaymentStatus.HOSTELLER_CONFIRMED_PAYMENT);
-        payment.setTransactionDate(transactionDate);
-        payment.setPaymentMode(paymentMode);
-        return paymentRepository.save(payment);
-    }
-    public Payment verifyPayment(Long wardenId, Long paymentId, Payment.PaymentStatus paymentStatus) {
-        Warden warden = wardenRepository.findById(wardenId)
-                .orElseThrow(() -> new RuntimeException("Warden not found with id: " + wardenId));
-
-        Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new RuntimeException("Payment not found with id: " + paymentId));
-
-        if (!payment.getWarden().equals(warden)) {
-            throw new RuntimeException("This payment is not associated with the given warden");
+        try {
+            payment.setPaymentStatus(Payment.PaymentStatus.SUCCESS);
+            payment.setTransactionDate(transactionDate);
+            payment.setPaymentMode(paymentMode);
+        } catch (Exception e) {
+            // If any exception occurs during payment processing
+            payment.setPaymentStatus(Payment.PaymentStatus.FAILED);
         }
 
-        if (payment.getPaymentStatus() != Payment.PaymentStatus.HOSTELLER_CONFIRMED_PAYMENT) {
-            throw new RuntimeException("This payment cannot be verified as the hosteller has not confirmed the payment yet");
-        }
-
-        payment.setPaymentStatus(paymentStatus);
         return paymentRepository.save(payment);
     }
+
 
     public Payment getPaymentById(Long id) {
         return paymentRepository.findById(id)

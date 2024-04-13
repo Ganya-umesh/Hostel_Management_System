@@ -6,6 +6,7 @@ import com.example.hostel_management.Model.Warden;
 import com.example.hostel_management.Service.ComplaintService;
 import com.example.hostel_management.Service.HostellerService;
 import com.example.hostel_management.Service.WardenService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -69,12 +70,22 @@ public class ComplaintController {
         return "complaints/resolve_complaints";
     }
 
-    @PutMapping("/resolve/{id}/{wardenId}")
-    public String resolveComplaint(@PathVariable Long id, @PathVariable Long wardenId) {
+    @PutMapping("/resolve/{wardenId}")
+    public ResponseEntity<String> resolveComplaint(@PathVariable Long wardenId, @RequestBody Long complaintId) {
         // Resolve the complaint
-        complaintService.resolveComplaint(id, wardenId);
+        complaintService.resolveComplaint(complaintId, wardenId);
 
-        return "redirect:/complaints/resolve_complaints";
+        return ResponseEntity.ok("Complaint resolved successfully!");
+    }
+
+
+    @GetMapping("/resolve/{wardenId}")
+    public String showResolveComplaintsPage(@PathVariable Long wardenId, Model model) {
+        // Get all pending complaints
+        List<Complaint> pendingComplaints = complaintService.getPendingComplaints();
+        model.addAttribute("complaints", pendingComplaints);
+        model.addAttribute("wardenId", wardenId);
+        return "complaints/resolve_complaints";
     }
 
 }

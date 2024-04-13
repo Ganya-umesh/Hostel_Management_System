@@ -15,12 +15,6 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @Column(name = "payment_by_hosteller_id")
-//    private Long hostellerId;
-
-//    @Column(name = "payment_approved_bywarden_id")
-//    private Long wardenId;
-
     @Column(nullable = false)
     private Long amount;
 
@@ -40,7 +34,7 @@ public class Payment {
     private PaymentMode paymentMode;
 
     public enum PaymentStatus {
-        PENDING,HOSTELLER_CONFIRMED_PAYMENT,SUCCESS, FAILED
+        PENDING,SUCCESS,FAILED
     }
 
     public enum TransactionType {

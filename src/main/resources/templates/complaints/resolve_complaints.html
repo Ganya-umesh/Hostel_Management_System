@@ -11,19 +11,53 @@
     <thead>
     <tr>
         <th>Complaint ID</th>
+        <th>Hosteller Name</th>
+        <th>Room Number</th>
+        <th>Complaint Type</th>
         <th>Description</th>
-        <th>Status</th>
-        <!-- Add more table headers as needed -->
+        <th>Action</th>
     </tr>
     </thead>
     <tbody>
     <!-- Iterate over the list of complaints and display them -->
     <tr th:each="complaint : ${complaints}">
         <td th:text="${complaint.id}"></td>
+        <td th:text="${complaint.hosteller.username}"></td>
+        <td th:text="${complaint.hosteller.roomNumber}"></td>
+        <td th:text="${complaint.complaintType}"></td>
         <td th:text="${complaint.complaint_description}"></td>
-        <td th:text="${complaint.status}"></td>
+        <td>
+            <!-- Resolve button for each complaint -->
+            <button type="button" th:onclick="'resolveComplaint(\'' + ${complaint.id} + '\', \'' + ${wardenId} + '\')'">Resolve Complaint</button>
+
+        </td>
     </tr>
     </tbody>
 </table>
+
+<!-- Script to handle resolving complaints -->
+<script>
+    function resolveComplaint(complaintId, wardenId) {
+        if (confirm("Are you sure you want to resolve this complaint?")) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("PUT", `/complaints/resolve/${wardenId}`, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+
+            xhr.onload = function () {
+                if (xhr.readyState === xhr.DONE) {
+                    if (xhr.status === 200) {
+                        alert("Complaint resolved successfully!");
+                        location.reload(); // Refresh the page to update the list
+                    } else {
+                        alert("Failed to resolve complaint. Please try again.");
+                    }
+                }
+            };
+
+            xhr.send(JSON.stringify(complaintId));
+        }
+    }
+
+</script>
 </body>
 </html>

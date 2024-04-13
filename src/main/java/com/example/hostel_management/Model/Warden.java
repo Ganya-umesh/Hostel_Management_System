@@ -31,15 +31,15 @@ public class Warden{
     @Column(nullable = false,unique = true)
     private String phoneNumber;
 
-//    @Override
-//    public String toString() {
-//        return "Warden{" +
-//                "username='" + username + '\'' +
-//                ", phoneNumber='" + phoneNumber + '\'' +
-//                ", password='" + password + '\'' +
-//                ", email='" + email + '\'' +
-//                '}';
-//    }
+    @Override
+    public String toString() {
+        return "Warden{" +
+                "username='" + username + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 
      @OneToMany(mappedBy = "warden",fetch=FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Complaint.class)
      @JsonManagedReference(value = "warden-complaints")
