@@ -1,21 +1,25 @@
 spring:
-     datasource:
-       username: root
-       password: ganya
-       url: jdbc:mysql://localhost:3306/hostel_h4
-       driver-class-name: com.mysql.cj.jdbc.Driver
-     jpa:
-         hibernate:
-            ddl-auto: update
-         show-sql: true
-         properties:
-            hibernate:
-              format_sql: true
-              jdbc:
-                 lob:
-              non_contextual_creation: true
-              database: mysql
-            database-platform: org.hibernate.dialect.MySQLDialect
+  datasource:
+    username: root
+    password: ganya
+    url: jdbc:mysql://localhost:3306/hostel_h4
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
 logging:
   level:
     root: INFO

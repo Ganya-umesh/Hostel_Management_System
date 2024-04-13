@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ComplaintService {
@@ -26,14 +27,8 @@ public class ComplaintService {
 
         complaint.setHosteller(hostellerService.getHostellerById(hostellerId));
         complaint.setWarden(wardenService.getWardenById(wardenId));
-
-
         complaint.setLodgingTime(LocalDateTime.now());
-
-
         complaint.setStatus(Complaint.ComplaintStatus.PENDING);
-
-
         return complaintRepository.save(complaint);
     }
 
@@ -48,7 +43,9 @@ public class ComplaintService {
         return null;
     }
 
-
+    public List<Complaint> getPendingComplaints() {
+        return complaintRepository.findAllByStatus(Complaint.ComplaintStatus.PENDING);
+    }
 
 
 }

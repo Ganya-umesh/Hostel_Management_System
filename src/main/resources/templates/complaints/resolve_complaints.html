@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Complaints</title>
+</head>
+<body>
+<h1>Pending Complaints</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Complaint ID</th>
+        <th>Description</th>
+        <th>Status</th>
+        <!-- Add more table headers as needed -->
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Iterate over the list of complaints and display them -->
+    <tr th:each="complaint : ${complaints}">
+        <td th:text="${complaint.id}"></td>
+        <td th:text="${complaint.complaint_description}"></td>
+        <td th:text="${complaint.status}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

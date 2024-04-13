@@ -24,7 +24,6 @@ public class HostellerService {
     //no need to autowire the constructor because spring 4.3 onwards whenever there is only a single constructor in the class then autowiring happens implicitly
     @Autowired
     public HostellerService(HostellerRepository hostellerRepository) {
-
         this.hostellerRepository = hostellerRepository;
     }
 
@@ -33,7 +32,6 @@ public class HostellerService {
     }
 
     public Hosteller getHostellerById(Long id) {
-
         return hostellerRepository.findById(id).orElse(null);
     }
 
@@ -65,6 +63,16 @@ public class HostellerService {
             String message = "Hosteller with id " + hostellerId + " does not exist.";
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
         }
+    }
+
+    public Hosteller authenticateHosteller(String email, String password) {
+        Hosteller hosteller = hostellerRepository.findByEmail(email);
+
+        if (hosteller != null && hosteller.getPassword().equals(password)) {
+            return hosteller;
+        }
+
+        return null;
     }
 
 }

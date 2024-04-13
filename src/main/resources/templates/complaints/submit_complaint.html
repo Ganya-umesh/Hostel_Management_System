@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Submit Complaint</title>
+</head>
+<body>
+<h1>Submit Complaint</h1>
+<form th:action="@{/complaints/submit/{hostellerId}/{wardenId}(hostellerId=${hostellerId},wardenId=${wardenId})}"
+      th:object="${complaint}" method="post">
+    <div>
+        <label for="complaintDescription">Complaint Description:</label>
+        <textarea id="complaintDescription" th:field="*{complaint_description}" required></textarea>
+    </div>
+    <div>
+        <label for="complaintType">Complaint Type:</label>
+        <select id="complaintType" th:field="*{complaintType}" required>
+            <option th:each="type : ${T(com.example.hostel_management.Model.Complaint.ComplaintType).values()}"
+                    th:value="${type}" th:text="${type}"></option>
+        </select>
+    </div>
+    <button type="submit">Submit Complaint</button>
+</form>
+</body>
+</html>
