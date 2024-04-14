@@ -1,8 +1,8 @@
 spring:
      datasource:
        username: root
-       password: ganya
-       url: jdbc:mysql://localhost:3306/hostel_h4
+       password: aditya11
+       url: jdbc:mysql://localhost:3306/hostel_management_project
        driver-class-name: com.mysql.cj.jdbc.Driver
      jpa:
          hibernate:

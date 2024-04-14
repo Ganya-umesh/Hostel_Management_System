@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+<h1>Register</h1>
+<form th:action="@{/login/registerSubmitWarden}" method="post">
+    <input type="hidden" name="role" value="ROLE_WARDEN">
+    <label>Username: <input type="text" name="username"></label><br>
+    <label>Email: <input type="email" name="email"></label><br>
+    <label>Password: <input type="password" name="password"></label><br>
+    <button type="submit">Register</button>
+
+    <a th:href="@{/login/oauth2/authorization/google}"><img src="google-icon.png" alt="or sign in with Google instead"></a>
+
+</form>
+</body>
+</html>

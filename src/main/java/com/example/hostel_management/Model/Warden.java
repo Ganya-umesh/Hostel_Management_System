@@ -1,55 +1,49 @@
 package com.example.hostel_management.Model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import jakarta.persistence.*;
-import lombok.*;
 
-import java.util.List;
-
-@Entity
-@Table(name = "warden")
 @Data
-//@Getter @Data internally uses @Getter and @Setter
-//@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Entity
+@Table(name="warden")
 public class Warden{
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long warden_id;
-
-    @Column(nullable = false, unique = true)
-    private String username;
+    private Long id;
 
     @Column(nullable = false)
-    private String password;
+    private String username;
 
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false,unique = true)
-    private String phoneNumber;
+    @Column(nullable = false)
+    private String password;
 
-//    @Override
-//    public String toString() {
-//        return "Warden{" +
-//                "username='" + username + '\'' +
-//                ", phoneNumber='" + phoneNumber + '\'' +
-//                ", password='" + password + '\'' +
-//                ", email='" + email + '\'' +
-//                '}';
-//    }
+    @Column(nullable = false)
+    private String role;
 
-     @OneToMany(mappedBy = "warden",fetch=FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Complaint.class)
-     @JsonManagedReference(value = "warden-complaints")
-     private List<Complaint> complaints;
+    // Other attributes specific to the warden entity can be added here
 
-     @OneToMany(mappedBy = "warden",fetch=FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = LeaveForm.class)
-     @JsonManagedReference(value = "warden-leaveforms")
-     private List<LeaveForm> leaveForms;
+    // Constructors, getters, setters, etc.
+    public String getPassword() {
+        return this.password;
+    }
 
-     @OneToMany(mappedBy = "warden",fetch=FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Payment.class)
-     @JsonManagedReference(value = "warden-payments")
-     private List<Payment> payments;
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

@@ -1,87 +1,63 @@
 package com.example.hostel_management.Model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
-
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name="hosteller")
+@Table(name = "hosteller")
 public class Hosteller{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "username",nullable = false)
     private String username;
 
-
-    @Column(name = "phone_number", unique = true,nullable = false)
-    private String phoneNumber;
-
-    @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false, unique = true)
+    @Column(name = "email",nullable = false)
     private String email;
 
-    @Column(name = "room_number")
-    private Integer roomNumber;
+    @Column(name="password",nullable = false)
+    private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "current_grad_year")
-    public GradYear currentGradYear;
+    @Column(name = "year",nullable = false)
+    private Integer year;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "branch")
-    public Branch branch;
+    @Column(name="role",columnDefinition = "VARCHAR(255) DEFAULT 'ROLE_USER'")
+    private String role;
 
-    public enum GradYear {
-        YEAR_1, YEAR_2, YEAR_3, YEAR_4
+
+    public String getPassword() {
+        return this.password;
     }
 
-    public enum Branch {
-        CSE, ECE, MECH, AI_ML, EEE, BT
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
     public String toString() {
-        return "Hosteller{" +
+        return "Login{" +
                 "username='" + username + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
                 ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", roomNumber=" + roomNumber +
-                ", currentGradYear='" + currentGradYear + '\'' +
-                ", branch='" + branch + '\'' +
+                ", year=" + year +
                 '}';
     }
 
-    @OneToMany(mappedBy = "hosteller",fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-    @JsonManagedReference(value = "hosteller-complaints")
-    private List<Complaint> complaintsLodged;
-
-    @OneToMany(mappedBy = "hosteller",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JsonManagedReference(value = "hosteller-leaveforms")
-    private List<LeaveForm> leavesApplied;
-
-    @OneToMany(mappedBy = "hosteller",fetch = FetchType.EAGER,cascade = {CascadeType.MERGE,CascadeType.PERSIST})
-    @JsonManagedReference(value = "hosteller-payments")
-    private List<Payment> paymentslist; //we don't want cascade.remove here because we don't want to remove the payment if the hosteller is removed
-
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "hosteller", cascade = CascadeType.ALL)
-    @JsonManagedReference(value = "hosteller-parent")
-    private Parent parent;
-
-
-
+    public String getRole() {
+        this.role = role;
+        return null;
+    }
 }

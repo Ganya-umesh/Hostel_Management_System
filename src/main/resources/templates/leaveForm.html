@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Application</title>
+</head>
+<body>
+<h1>Leave Application</h1>
+<form id="leaveForm" action="/api/leaveform/submit" method="post">
+    <label>Hosteller's Name: <span th:text="${username}"></span></label><br>
+    <input type="hidden" name="hosteller" value="${username}">
+    <label>Start Date: <input type="date" name="start_date"></label><br>
+    <label>End Date: <input type="date" name="end_date"></label><br>
+    <label>Reason: <textarea name="reason" rows="4" cols="50"></textarea></label><br>
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>

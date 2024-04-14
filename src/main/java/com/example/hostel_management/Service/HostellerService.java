@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,6 +66,29 @@ public class HostellerService {
             String message = "Hosteller with id " + hostellerId + " does not exist.";
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
         }
+    }
+
+    public boolean authenticate(String username, String password) {
+        Hosteller user = hostellerRepository.findByUsername(username);
+        if (user != null) {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            return passwordEncoder.matches(password, user.getPassword());
+        }
+        return false; // User not found or incorrect password
+    }
+    public void saveLogin(Hosteller hosteller) {
+        // Hash the password before storing it
+        String hashedPassword = hashPassword(hosteller.getPassword());
+        hosteller.setPassword(hashedPassword);
+
+        // Save the login object with hashed password
+        hostellerRepository.save(hosteller);
+    }
+
+    // Helper method to hash the password
+    private String hashPassword(String password) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.encode(password);
     }
 
 }

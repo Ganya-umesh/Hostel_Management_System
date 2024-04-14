@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+<h1>Login</h1>
+<form th:action="@{/login/loginSubmit}" th:object="${login}" method="post">
+    <label>Username: <input type="text" name="username" th:field="*{username}"></label><br>
+    <label>Password: <input type="password" name="password" th:field="*{password}"></label><br>
+    <button type="submit">Login</button>
+</form>
+<p>Don't have an account? <a th:href="@{/login/registerForm}">Register</a></p>
+
+<a th:href="@{/login/oauth2/authorization/google}"><img src="google-icon.png" alt="or sign in with Google instead"></a>
+
+</body>
+</html>

@@ -1,67 +1,44 @@
 package com.example.hostel_management.Model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "LeaveForm")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Entity
+@Table(name="leave_form")
 public class LeaveForm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long formId;
+    private Long id;
 
-    @Column(name = "checkout_date", nullable = false)
-    private LocalDate checkOutDate;
+    @Column(name = "hosteller", nullable = false)
+    private String hosteller;
 
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
 
-    @Column(name = "check_out_time", nullable = false)
-    private LocalDateTime checkOutTime;
+    @Column(name = "end_date", nullable = false)
+    private LocalDate endDate;
 
-    @Column(name = "expected_arrival_date", nullable = false)
-    private LocalDate expectedArrivalDate;
+    @Column(name = "reason", nullable = false)
+    private String reason;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    @Column(name = "form_status")
-    private FormStatus formStatus;
+    private LeaveStatus status = LeaveStatus.PENDING;
 
-
-    @Column(name = "check_in_date")
-    private LocalDate checkInDate;
-
-
-    @Column(name = "check_in_time")
-    private LocalDateTime checkInTime;
-
-    public enum FormStatus {
-        PENDING, PARENT_APPROVED, WARDEN_APPROVED,REJECTED,CHECKIN_REQUESTED ,CHECKIN_APPROVED
+    public enum LeaveStatus {
+        PENDING, APPROVED, REJECTED
     }
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hosteller_id",nullable = false)
-    @JsonBackReference(value = "hosteller-leaveforms")
-    private Hosteller hosteller;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "warden_id")
-    @JsonBackReference(value = "warden-leaveforms")
-    private Warden warden;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id",nullable = false)
-    @JsonBackReference(value = "parent-leaveforms")
-    private Parent parent;
-
+    // Constructors, getters, setters, etc.
 }
