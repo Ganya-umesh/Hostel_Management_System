@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestParam;
+import java.time.LocalDate;
+
 
 @Controller
 @RequestMapping("/api/leaveform")
@@ -36,9 +39,16 @@ public class LeaveFormController {
     }
 
     @PostMapping("/submit")
-    public String submit(@ModelAttribute LeaveForm leaveForm) {
-        System.out.println("leaeve form details "+ leaveForm);
+    public String submit(@ModelAttribute LeaveForm leaveForm, @RequestParam("start_date") String startDateStr, @RequestParam("end_date") String endDateStr) {
         try {
+            LocalDate startDate = LocalDate.parse(startDateStr);
+            LocalDate endDate = LocalDate.parse(endDateStr);
+
+            leaveForm.setStartDate(startDate);
+            leaveForm.setEndDate(endDate);
+
+            System.out.println("leave form details " + leaveForm);
+
             leaveFormService.saveLeaveForm(leaveForm);
             return "redirect:/hosteller/dashboard";
         } catch (Exception e) {
