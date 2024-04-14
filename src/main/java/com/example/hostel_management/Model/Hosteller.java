@@ -24,6 +24,8 @@ public class Hosteller{
     @Column(nullable = false)
     private String username;
 
+    @Column()
+    private String role;
 
     @Column(name = "phone_number", unique = true,nullable = false)
     private String phoneNumber;

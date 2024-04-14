@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Registration</title>
+</head>
+<body>
+<h2>User Registration</h2>
+<th:block th:if="${session.msg}">
+    <p class="text-center fs-3" th:text="${session.msg}"></p>
+</th:block>
+
+<form th:action="@{/saveHosteller}" method="post">
+    <label>Username:</label>
+    <input type="text" name="username" required>
+
+    <label>Email:</label>
+    <input type="email" name="email" required>
+
+    <label>Phone Number:</label>
+    <input type="text" name="phoneNumber" required>
+
+    <label>Password:</label>
+    <input type="password" name="password" required>
+
+
+    <label>Current Graduation Year:</label>
+    <select name="currentGradYear" required>
+        <option value="YEAR_1">Year 1</option>
+        <option value="YEAR_2">Year 2</option>
+        <option value="YEAR_3">Year 3</option>
+        <option value="YEAR_4">Year 4</option>
+    </select>
+
+    <label>Branch:</label>
+    <select name="branch" required>
+        <option value="CSE">Computer Science and Engineering</option>
+        <option value="ECE">Electronics and Communication Engineering</option>
+        <option value="MECH">Mechanical Engineering</option>
+        <option value="AI_ML">Artificial Intelligence and Machine Learning</option>
+        <option value="EEE">Electrical and Electronics Engineering</option>
+        <option value="BT">Biotechnology</option>
+    </select>
+
+    <button type="submit">Register</button>
+</form>
+</body>
+</html>

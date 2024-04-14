@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Leave Form Status</title>
+</head>
+<body>
+<h2>Update Leave Form Status</h2>
+<form th:action="@{'/update_lf/' + ${leaveFormId} + '/stats/parent/' + ${parentId}}" th:object="${leaveForm}" method="post">
+    <input type="hidden" name="_method" value="put" />
+    <input type="hidden" name="leaveFormId" th:value="${leaveFormId}" />
+    <input type="hidden" name="parentId" th:value="${parentId}" />
+
+    <label>Status:</label>
+    <input type="radio" th:field="*{formStatus}" value="PARENT_APPROVED" required> Approve
+    <input type="radio" th:field="*{formStatus}" value="REJECTED" required> Reject
+
+    <button type="submit">Update Status</button>
+</form>
+
+</body>
+</html>

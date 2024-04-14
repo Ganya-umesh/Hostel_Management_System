@@ -16,9 +16,7 @@ spring:
             non_contextual_creation: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
 
 logging:
   level:

@@ -9,6 +9,7 @@ import com.example.hostel_management.Repository.PaymentRepository;
 import com.example.hostel_management.Repository.WardenRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -56,7 +57,7 @@ public class PaymentService {
 
         try {
             payment.setPaymentStatus(Payment.PaymentStatus.SUCCESS);
-            payment.setTransactionDate(transactionDate);
+            payment.setTransactionDate(String.valueOf(LocalDate.now()));
             payment.setPaymentMode(paymentMode);
         } catch (Exception e) {
             // If any exception occurs during payment processing

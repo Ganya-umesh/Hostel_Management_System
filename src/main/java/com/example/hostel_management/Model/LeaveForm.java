@@ -37,15 +37,8 @@ public class LeaveForm {
     private FormStatus formStatus;
 
 
-    @Column(name = "check_in_date")
-    private LocalDate checkInDate;
-
-
-    @Column(name = "check_in_time")
-    private LocalDateTime checkInTime;
-
     public enum FormStatus {
-        PENDING, PARENT_APPROVED, WARDEN_APPROVED,REJECTED,CHECKIN_REQUESTED ,CHECKIN_APPROVED
+        PENDING, PARENT_APPROVED, WARDEN_APPROVED,REJECTED
     }
 
 

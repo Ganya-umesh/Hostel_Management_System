@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Submit Leave Form</title>
+</head>
+<body>
+<h2>Submit Leave Form</h2>
+<form th:action="@{/submit_lf/{hostellerId}/{parentId}}" th:object="${leaveForm}" method="post">
+    <input type="hidden" th:field="*{hosteller.id}" th:value="${hostellerId}">
+    <input type="hidden" th:field="*{parent.id}" th:value="${parentId}">
+    <label for="checkoutDate">Check-out Date:</label>
+    <input type="date" id="checkoutDate" th:field="*{checkOutDate}" required><br>
+    <label for="checkoutTime">Check-out Time:</label>
+    <input type="datetime-local" id="checkoutTime" th:field="*{checkOutTime}" required><br>
+    <label for="expectedArrivalDate">Expected Arrival Date:</label>
+    <input type="date" id="expectedArrivalDate" th:field="*{expectedArrivalDate}" required><br>
+    <!-- Add more form fields if needed -->
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>

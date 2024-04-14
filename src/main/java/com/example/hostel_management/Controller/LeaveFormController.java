@@ -6,12 +6,13 @@ import com.example.hostel_management.Service.LeaveFormService;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/leaveform")
+@Controller
+@RequestMapping("/leaveform")
 public class LeaveFormController {
 
     private final LeaveFormService leaveFormService;
@@ -23,62 +24,66 @@ public class LeaveFormController {
         this.authenticationService = authenticationService;
     }
 
-    @PostMapping("/{hostellerId}/{parentId}")
-    public ResponseEntity<LeaveForm> saveLeaveForm(
-            @PathVariable Long hostellerId,
-            @PathVariable Long parentId,
-            @RequestBody LeaveForm leaveForm
-    ) {
-        // Check if the authenticated parent is associated with the specified hosteller
+    @PostMapping("/submit_lf/{hostellerId}/{parentId}")
+    public String submitLeaveForm(@ModelAttribute LeaveForm leaveform, @PathVariable Long hostellerId, @PathVariable Long parentId, Model model) {
         authenticationService.validateParentHostellerRelationship(parentId, hostellerId);
 
-        LeaveForm savedLeaveForm = leaveFormService.saveLeaveForm(leaveForm, hostellerId, parentId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedLeaveForm);
+        LeaveForm savedLeaveForm = leaveFormService.saveLeaveForm(leaveform, hostellerId, parentId);
+        return "redirect:/leaveform/submit_leaveform";
     }
 
-    @GetMapping("/{id}")
-    public LeaveForm getLeaveFormById(@PathVariable Long id) {
-        return leaveFormService.getLeaveFormById(id);
+    @GetMapping("/submit_lf/{hostellerId}/{parentId}")
+    public String showSubmitLeaveFormPage(@PathVariable Long hostellerId, @PathVariable Long parentId, Model model) {
+
+        model.addAttribute("leaveForm", new LeaveForm());
+        model.addAttribute("hostellerId", hostellerId);
+        model.addAttribute("parentId", parentId);
+        return "leaveform/submit_leaveform";
     }
 
-    @PutMapping("/{leaveFormId}/stats/parent")
-    public ResponseEntity<LeaveForm> updateLeaveFormStatusByParent(
+    @PutMapping("/update_lf/{leaveFormId}/stats/parent/{parentId}")
+    public String updateLeaveFormStatusByParent(
             @PathVariable Long leaveFormId,
-            @RequestBody LeaveFormUpdateRequest request
-    ) {
-        Long hostellerId = request.getHostellerId();
-        Long parentId = request.getParentId();
-        String status = request.getStatus();
-
-        logger.info("Received PUT request for leave form id: {}", leaveFormId);
-        logger.info("Status: {}", status);
-        logger.info("Hosteller Id: {}", hostellerId);
-        logger.info("Parent Id: {}", parentId);
+            @PathVariable Long parentId,
+            @ModelAttribute("leaveForm") LeaveForm leaveForm) {
 
         // Check if the authenticated parent is associated with the hosteller of the leave form
+        Long hostellerId = leaveForm.getHosteller().getId();
         authenticationService.validateParentHostellerRelationship(parentId, hostellerId);
 
-        LeaveForm leaveForm = leaveFormService.getLeaveFormById(leaveFormId);
+        LeaveForm.FormStatus formStatus = leaveForm.getFormStatus();
 
-        if (leaveForm == null) {
-            return ResponseEntity.notFound().build(); // Return 404 if leave form not found
-        }
-        if (!leaveForm.getHosteller().getId().equals(hostellerId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(null); // Return 403 Forbidden if the leave form doesn't belong to the specified hosteller
-        }
-
-        LeaveForm updatedLeaveForm;
-        if ("approve".equalsIgnoreCase(status)) {
-            updatedLeaveForm = leaveFormService.approveLeaveFormByParent(leaveFormId);
-        } else if ("reject".equalsIgnoreCase(status)) {
-            updatedLeaveForm = leaveFormService.rejectLeaveFormByParent(leaveFormId);
+        if (formStatus == LeaveForm.FormStatus.PARENT_APPROVED) {
+            leaveFormService.approveLeaveFormByParent(leaveFormId);
+        } else if (formStatus == LeaveForm.FormStatus.REJECTED) {
+            leaveFormService.rejectLeaveFormByParent(leaveFormId);
         } else {
-            return ResponseEntity.badRequest().build(); // Return 400 Bad Request if the status is invalid
+            // Handle the case when the status is invalid
+            throw new IllegalArgumentException("Invalid status: " + formStatus);
         }
 
-        return ResponseEntity.ok(updatedLeaveForm);
+        // Update the leave form in the database or perform any other necessary operations
+
+        return "leaveform/parent_update_status";
     }
+
+    @GetMapping("/update_lf/{leaveFormId}/stats/parent/{parentId}")
+    public String showUpdateLeaveFormStatusPage(@PathVariable Long leaveFormId, @PathVariable Long parentId, Model model) {
+        LeaveForm leaveForm = leaveFormService.getLeaveFormById(leaveFormId);
+        if (leaveForm == null) {
+            // Handle the case when the leave form is not found
+            return "error";
+        }
+
+        // Check if the authenticated parent is associated with the hosteller of the leave form
+        //authenticationService.validateParentHostellerRelationship(parentId, leaveForm.getHosteller().getId());
+
+        model.addAttribute("leaveForm", leaveForm);
+        model.addAttribute("parentId", parentId);
+        return "leaveform/parent_update_status";
+    }
+
+
     @PutMapping("/{leaveFormId}/stats/warden")
     public ResponseEntity<LeaveForm> updateLeaveFormStatusByWarden(
             @PathVariable Long leaveFormId,
@@ -113,46 +118,9 @@ public class LeaveFormController {
         private String status;
     }
 
-
-    @PutMapping("/{leaveFormId}/checkin")
-    public ResponseEntity<LeaveForm> updateCheckInDateTimeByHosteller(
-            @PathVariable Long leaveFormId,
-            @RequestBody UpdateCheckInRequest request
-    ) {
-        Long hostellerId = request.getHostellerId();
-
-        logger.info("Received PUT request for leave form id: {}", leaveFormId);
-        logger.info("Hosteller Id: {}", hostellerId);
-
-        LeaveForm updatedLeaveForm = leaveFormService.updateCheckInDateTimeByHosteller(leaveFormId, hostellerId);
-        return ResponseEntity.ok().body(updatedLeaveForm);
+    @GetMapping("/{id}")
+    public LeaveForm getLeaveFormById(@PathVariable Long id) {
+        return leaveFormService.getLeaveFormById(id);
     }
-
-    // Define a class to represent the request body for updating check-in date and time
-    @Data
-    public static class UpdateCheckInRequest {
-        private Long hostellerId;
-    }
-
-    @PutMapping("/{leaveFormId}/checkin/approve")
-    public ResponseEntity<LeaveForm> approveCheckInRequestByWarden(
-            @PathVariable Long leaveFormId,
-            @RequestBody WardenActionRequest request
-    ) {
-        Long wardenId = request.getWardenId();
-
-        logger.info("Received PUT request to approve check-in for leave form id: {}", leaveFormId);
-        logger.info("Warden Id: {}", wardenId);
-
-        LeaveForm approvedLeaveForm = leaveFormService.approveCheckInRequestByWarden(leaveFormId, wardenId);
-        return ResponseEntity.ok().body(approvedLeaveForm);
-    }
-
-    // this is an alternative of using map function
-    @Data
-    public static class WardenActionRequest {
-        private Long wardenId;
-    }
-
 }
 

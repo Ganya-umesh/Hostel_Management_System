@@ -13,11 +13,13 @@ public class ParentService {
 
     @Autowired
     public ParentService(ParentRepository parentRepository) {
-
         this.parentRepository = parentRepository;
     }
 
     public Parent saveParent(Parent parent) {
+        if (parent == null) {
+            throw new IllegalArgumentException("Parent object cannot be null");
+        }
         return parentRepository.save(parent);
     }
 

@@ -15,19 +15,18 @@ import java.util.Optional;
 
 @Service
 public class HostellerService {
-    private final HostellerRepository hostellerRepository;
+    private  final HostellerRepository hostellerRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-
-    //no need to autowire the constructor because spring 4.3 onwards whenever there is only a single constructor in the class then autowiring happens implicitly
     @Autowired
     public HostellerService(HostellerRepository hostellerRepository) {
         this.hostellerRepository = hostellerRepository;
     }
 
-    public Hosteller saveHosteller(Hosteller hosteller) {
+
+    public  Hosteller saveHosteller(Hosteller hosteller) {
         return hostellerRepository.save(hosteller);
     }
 
@@ -65,14 +64,20 @@ public class HostellerService {
         }
     }
 
-    public Hosteller authenticateHosteller(String email, String password) {
-        Hosteller hosteller = hostellerRepository.findByEmail(email);
+//    public Hosteller authenticateHosteller(String email, String password) {
+//        Hosteller hosteller = hostellerRepository.findByEmail(email);
+//
+//        if (hosteller != null && hosteller.getPassword().equals(password)) {
+//            return hosteller;
+//        }
+//
+//        return null;
+//    }
 
-        if (hosteller != null && hosteller.getPassword().equals(password)) {
-            return hosteller;
-        }
 
-        return null;
+
+    public Hosteller findByEmail(String email) {
+        Optional<Hosteller>existing = hostellerRepository.findByEmail(email);
     }
 
 }
