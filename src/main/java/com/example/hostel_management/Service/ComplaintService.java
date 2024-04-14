@@ -27,7 +27,6 @@ public class ComplaintService {
 
         complaint.setHosteller(hostellerService.getHostellerById(hostellerId));
         complaint.setWarden(wardenService.getWardenById(wardenId));
-        complaint.setLodgingTime(LocalDateTime.now());
         complaint.setStatus(Complaint.ComplaintStatus.PENDING);
         return complaintRepository.save(complaint);
     }

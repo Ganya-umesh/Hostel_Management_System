@@ -50,7 +50,7 @@ public class HostellerService {
 
         Hosteller updatedHosteller = hostellerRepository.save(hostellerToBeUpdated);
         return ResponseEntity.ok(updatedHosteller);
-    } ;
+    }
 
     public ResponseEntity<String> removeHosteller(Long hostellerId) {
         Optional<Hosteller> hostellerOptional = hostellerRepository.findById(hostellerId);
@@ -74,10 +74,8 @@ public class HostellerService {
 //        return null;
 //    }
 
-
-
-    public Hosteller findByEmail(String email) {
-        Optional<Hosteller>existing = hostellerRepository.findByEmail(email);
+    public Boolean UserExists(String email) {
+        return hostellerRepository.findByEmail(email).isPresent();
     }
 
 }

@@ -3,7 +3,9 @@ package com.example.hostel_management.Model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Data
@@ -24,8 +26,8 @@ public class Complaint {
     @Column(name = "Status")
     public ComplaintStatus status;
 
-    @Column(name = "lodging_time",nullable = false)
-    private LocalDateTime lodgingTime;
+    @CreationTimestamp
+    private Instant lodgingTime;
 
     @Column(name = "resolving_time")
     private LocalDateTime resolvingTime;
