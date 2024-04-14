@@ -91,5 +91,8 @@ public class HostellerService {
         return passwordEncoder.encode(password);
     }
 
+    public Hosteller findByUsername(String username) {
+        return hostellerRepository.findByUsername(username);
+    }
 }
 

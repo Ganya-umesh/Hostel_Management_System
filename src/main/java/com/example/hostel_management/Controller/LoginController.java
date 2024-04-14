@@ -50,18 +50,19 @@ public class LoginController {
     public String loginSubmit(@ModelAttribute User user, HttpSession session) {
         String username = user.getUsername();
         String password = user.getPassword();
-        System.out.println("password is "+password);
+        Hosteller hosteller = hostellerService.findByUsername(username);
 
         if (userService.authenticate(username, password)) {
-            session.setAttribute("username", username);
-            // Assuming you have a method to retrieve user by username
             User user2 = userService.findByUsername(username);
             String role = user2.getRole();
 
-            // Redirect based on user's role
             if ("ROLE_USER".equals(role)) {
+                session.setAttribute("username", hosteller.getUsername());
+                session.setAttribute("email", hosteller.getEmail());
+                session.setAttribute("year", hosteller.getYear());
                 return "redirect:/hosteller/dashboard";
             } else if ("ROLE_WARDEN".equals(role)) {
+                session.setAttribute("username", username);
                 return "redirect:/warden/dashboard";
             } else {
                 return "redirect:/login/loginForm?errors"; // Invalid role
@@ -71,12 +72,15 @@ public class LoginController {
         }
     }
 
+
     @PostMapping("/registerSubmit")
     public String register(@ModelAttribute Hosteller hosteller, HttpSession session) {
         try {
             hostellerService.saveLogin(hosteller);
             session.setAttribute("username", hosteller.getUsername());
-            return "redirect:/dashboard";
+            session.setAttribute("email", hosteller.getEmail());
+            session.setAttribute("year", hosteller.getYear());
+            return "redirect:/hosteller/dashboard";
         } catch (Exception e) {
             System.err.println("Error occurred while registering: " + e.getMessage());
             return "error";
@@ -87,7 +91,7 @@ public class LoginController {
     public String registerWarden(@ModelAttribute Warden warden) {
         try {
              wardenService.saveWarden(warden);
-            return "redirect:/dashboard";
+            return "redirect:/warden/dashboard";
         } catch (Exception e) {
             System.err.println("Error occurred while registering Warden: " + e.getMessage());
             return "error";

@@ -12,7 +12,28 @@
     <ul>
         <li><a th:href="@{/login/logout}">Logout</a></li>
         <li><a th:href="@{/api/leaveform/form}">Request for leave</a></li>
+        <li><a href="#" onclick="bookRoom()">Book Room Now</a></li>
     </ul>
 </div>
+
+<form id="bookRoomForm" action="/api/roomallocation/book" method="post" style="display: none;">
+    <!-- Hidden input field to store the current LocalDateTime -->
+    <input type="hidden" id="bookingTime" name="bookingTime">
+    <input type="hidden" id="priority" name="priority" value="1">
+    <!-- CSRF token input field -->
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+</form>
+
+
+<script>
+    function bookRoom() {
+        // Get the current date and time in ISO 8601 format
+        var currentDateTimeISO = new Date().toISOString();
+        // Set the current datetime to the hidden input field
+        document.getElementById("bookingTime").value = currentDateTimeISO;
+        // Submit the form
+        document.getElementById("bookRoomForm").submit();
+    }
+</script>
 </body>
 </html>

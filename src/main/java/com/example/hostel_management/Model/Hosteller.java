@@ -43,6 +43,14 @@ public class Hosteller{
         return this.username;
     }
 
+    public String getEmail() {
+        return this.email;
+    }
+
+    public Integer getYear() {
+        return this.year;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
