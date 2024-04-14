@@ -1,11 +1,14 @@
 package com.example.hostel_management.Controller;
 
 import com.example.hostel_management.Model.RoomAllocation;
+import com.example.hostel_management.Model.Warden;
 import com.example.hostel_management.Service.RoomAllocationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
@@ -55,13 +58,25 @@ public class RoomAllocationController {
 
             roomAllocationService.bookRoom(roomAllocation);
 
-            return "redirect:/hosteller/dashboard";
+            return "redirect:/api/roomallocation/hosteller/priority";
         } catch (Exception e) {
             // Handle error
             System.err.println("Error occurred while booking room: " + e.getMessage());
             return "error";
         }
     }
+
+    @GetMapping("/hosteller/priority")
+    public String showPriority(Model model) {
+        String username = (String) httpSession.getAttribute("username");
+        RoomAllocation userRoomAllocation = roomAllocationService.findRoomAllocationByUsername(username);
+
+        int userPriority = userRoomAllocation.getPriority() != null ? userRoomAllocation.getPriority() : 0;
+
+        model.addAttribute("priority", userPriority);
+        return "priority";
+    }
+
     @GetMapping("/allocate")
     public String allocatePriority() {
         // Retrieve all room allocations
