@@ -5,6 +5,7 @@ import com.example.hostel_management.Model.Warden;
 import com.example.hostel_management.Service.RoomAllocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
+import org.springframework.expression.spel.ast.NullLiteral;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -70,6 +71,10 @@ public class RoomAllocationController {
     public String showPriority(Model model) {
         String username = (String) httpSession.getAttribute("username");
         RoomAllocation userRoomAllocation = roomAllocationService.findRoomAllocationByUsername(username);
+
+        if(userRoomAllocation == null){
+            return "priorityError";
+        }
 
         int userPriority = userRoomAllocation.getPriority() != null ? userRoomAllocation.getPriority() : 0;
 

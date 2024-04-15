@@ -1,23 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Title</title>
 </head>
 <body>
-<h1>Welcome, <span th:text="${username}"></span>!</h1>
-<div>
-    <h2>Options:</h2>
-    <ul>
-        <li><a th:href="@{/login/logout}">Logout</a></li>
-        <li><a th:href="@{/api/leaveform/form}">Request for leave</a></li>
-        <li><a href="#" onclick="bookRoom()">Book Room Now</a></li>
-        <li><a th:href="@{/api/roomallocation/hosteller/priority}">Check priority for room</a></li>
-        <li><a th:href="@{/api/leaveform/checkStatus}">Check Leave Request Status</a></li>
-    </ul>
-</div>
-
+<h1>Room hasn't been booked yet</h1>
+<li><a href="#" onclick="bookRoom()">Book Room Now</a></li>
 <form id="bookRoomForm" action="/api/roomallocation/book" method="post" style="display: none;">
     <!-- Hidden input field to store the current LocalDateTime -->
     <input type="hidden" id="bookingTime" name="bookingTime">

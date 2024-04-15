@@ -6,6 +6,12 @@
     <title>Priority</title>
 </head>
 <body>
-<h1>Your Priority is: <span th:text="${priority}"></span></h1>
+<h1>
+    Your Priority is:
+    <span th:if="${priority == 0}">
+        Not assigned by the warden yet
+    </span>
+    <span th:if="${priority != 0}" th:text="${priority}"></span>
+</h1>
 </body>
 </html>

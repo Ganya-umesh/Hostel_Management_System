@@ -5,6 +5,8 @@ import com.example.hostel_management.Repository.LeaveFormRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LeaveFormService {
 
@@ -19,8 +21,18 @@ public class LeaveFormService {
         leaveFormRepository.save(leaveForm);
     }
 
-}
+    public List<LeaveForm> getAllLeaveForms() {
+        return leaveFormRepository.findAll();
+    }
 
+    public LeaveForm getLeaveFormById(Long id) {
+        return leaveFormRepository.findById(id).orElse(null);
+    }
+
+    public List<LeaveForm> getLeaveFormsByHosteller(String hosteller) {
+        return leaveFormRepository.findByHosteller(hosteller);
+    }
+}
 
 //    public LeaveForm saveLeaveForm(LeaveForm leaveForm, Long hostellerId, Long parentId) {
 //        Optional<Hosteller> hostellerOptional = hostellerRepository.findById(hostellerId);

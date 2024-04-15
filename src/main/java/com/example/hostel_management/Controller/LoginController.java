@@ -88,9 +88,11 @@ public class LoginController {
     }
 
     @PostMapping("/registerSubmitWarden")
-    public String registerWarden(@ModelAttribute Warden warden) {
+    public String registerWarden(@ModelAttribute Warden warden, HttpSession session, User user) {
         try {
-             wardenService.saveWarden(warden);
+            wardenService.saveWarden(warden);
+            String username = user.getUsername();
+            session.setAttribute("username", username);
             return "redirect:/warden/dashboard";
         } catch (Exception e) {
             System.err.println("Error occurred while registering Warden: " + e.getMessage());

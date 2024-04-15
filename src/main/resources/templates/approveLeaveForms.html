@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Form Approval</title>
+</head>
+<body>
+<h1>Leave Form Approval</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Reason</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Iterate over each leave form and display its details -->
+    <tr th:each="leaveForm : ${leaveForms}">
+        <td th:text="${leaveForm.id}"></td>
+        <td th:text="${leaveForm.hosteller}"></td>
+        <td th:text="${leaveForm.startDate}"></td>
+        <td th:text="${leaveForm.endDate}"></td>
+        <td th:text="${leaveForm.reason}"></td>
+        <td th:text="${leaveForm.status}"></td>
+        <td>
+            <form th:action="@{/api/leaveform/approveAction}" method="post">
+                <input type="hidden" th:name="id" th:value="${leaveForm.id}">
+                <input type="hidden" name="status" value="APPROVED">
+                <button type="submit">Approve</button>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/api/leaveform/approveAction}" method="post">
+                <input type="hidden" th:name="id" th:value="${leaveForm.id}">
+                <input type="hidden" name="status" value="REJECTED">
+                <button type="submit">Reject</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

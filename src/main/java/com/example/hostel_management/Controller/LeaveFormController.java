@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDate;
+import java.util.List;
+import com.example.hostel_management.Model.LeaveForm.LeaveStatus;
+
 
 
 @Controller
@@ -56,6 +59,63 @@ public class LeaveFormController {
             return "error";
         }
     }
+    @GetMapping("/approve")
+    public String approveLeaveForms(Model model) {
+        // Query the leave_form table to get all leave forms
+        List<LeaveForm> leaveForms = leaveFormService.getAllLeaveForms();
+
+        // Add the leave forms to the model to be displayed in the view
+        model.addAttribute("leaveForms", leaveForms);
+
+        // Return the view to display the leave forms
+        return "approveLeaveForms";
+    }
+
+    @PostMapping("/approveAction")
+    public String approveAction(@RequestParam("id") Long id, @RequestParam("status") String statusStr) {
+        try {
+            LeaveForm leaveForm = leaveFormService.getLeaveFormById(id);
+            if (leaveForm == null) {
+                // Handle case where leave form with the given id is not found
+                return "redirect:/errorrr";
+            }
+
+            // Convert status string to enum value
+            LeaveForm.LeaveStatus status = LeaveForm.LeaveStatus.valueOf(statusStr);
+
+            // Update leave form status
+            leaveForm.setStatus(status);
+
+            // Save the updated leave form
+            leaveFormService.saveLeaveForm(leaveForm);
+
+            // Redirect to the approval page or another appropriate page
+            return "redirect:/api/leaveform/approve";
+        } catch (IllegalArgumentException e) {
+            // Handle case where invalid status string is provided
+            return "redirect:/errorss";
+        } catch (Exception e) {
+            // Handle other exceptions
+            return "redirect:/error";
+        }
+    }
+    @GetMapping("/checkStatus")
+    public String checkStatus(Model model) {
+        // Retrieve the username of the logged-in user
+        String username = (String) httpSession.getAttribute("username");
+
+        // Query the leave_form table to get the leave forms submitted by the user
+        List<LeaveForm> userLeaveForms = leaveFormService.getLeaveFormsByHosteller(username);
+
+        System.out.println("the leave form is "+ userLeaveForms);
+
+        // Add the leave forms to the model to be displayed in the view
+        model.addAttribute("userLeaveForms", userLeaveForms);
+
+        // Return the view to display the leave form statuses
+        return "checkLeaveFormStatus";
+    }
+
 }
 //
 //    private final LeaveFormService leaveFormService;
